@@ -20,6 +20,7 @@ public class Movie {
     private Long id;
     private String movieName;
     private int runningTimeInMinutes;
+    @Column(length = 10000)
     private String description;
     private String ageRestriction;
     private int releaseYear;

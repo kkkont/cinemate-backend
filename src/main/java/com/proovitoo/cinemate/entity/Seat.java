@@ -16,6 +16,7 @@ public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private int seatRow;
     private int seatNumber;
     private boolean occupied;
     private boolean recommended;
