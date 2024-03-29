@@ -25,6 +25,7 @@ public class CinemaService {
 
 
 
+
     public List<Seat> getSeatsByScheduleId(Long scheduleId, int numberOfTickets) {
         recommendSeats(scheduleId, numberOfTickets);
         return seatRepository.findByScheduleId(scheduleId);
@@ -83,13 +84,6 @@ public class CinemaService {
         }
     }
 
-    public void updateSeatOccupancy(Long seatId, boolean isOccupied) {
-        Seat seat = seatRepository.findById(seatId).orElse(null);
-        if (seat != null) {
-            seat.setOccupied(isOccupied);
-            seatRepository.save(seat);
-        }
-    }
 
 
     public List<Movie> getAllMovies() {
@@ -210,5 +204,12 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
 
     public UserHistory save(UserHistory userHistory) {
         return userHistoryRepository.save(userHistory);
+    }
+
+    public void updateSeatOccupancy(List<Long> seatIds) {
+        seatRepository.findAllById(seatIds).forEach(seat -> {
+            seat.setOccupied(true);
+            seatRepository.save(seat);
+        });
     }
 }
