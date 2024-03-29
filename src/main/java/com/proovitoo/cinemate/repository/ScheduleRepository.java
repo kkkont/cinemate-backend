@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
     List<Schedule> findByMovieGenresName(String genreName);
+    List<Schedule> findByMovieId(Long movie_id);
     List<Schedule> findByMovieMovieName(String movieName);
 }
