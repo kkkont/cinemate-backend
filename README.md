@@ -1,5 +1,5 @@
 # Cinemate backend
-Java Spring Boot application serving as the backend for a cinema application. 
+Java Spring Boot application serving as the backend for a cinema application (frontend - https://github.com/kkkont/cinemate-frontend). 
 It provides various endpoints to interact with movie data, schedule, seats, user history and seat occupancy updates.
 
 ## Technologies Used
