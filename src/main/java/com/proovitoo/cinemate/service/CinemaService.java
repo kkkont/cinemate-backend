@@ -36,50 +36,91 @@ public class CinemaService {
     }
 
     /**
-     * Algorithm needs to be corrected.
+     * Algorithm that recommends seats to the middle of the hall using Euclidean distance
      *
      * @param scheduleId - id of the seance
      * @param numberOfTickets - number of the tickets being bought
      */
     public void recommendSeats(Long scheduleId, int numberOfTickets) {
         setAllRecommendedToFalse(scheduleId);
-        int centerRow = 4;
-        int centerSeat = 4;
+        int centerRow = 5;
+        int centerSeat = 5;
+        double minDistance = Double.MAX_VALUE;
+        int minRowDifference = Integer.MAX_VALUE; // For secondary criterion when the distances are the same
 
         List<Seat> allSeats = seatRepository.findByScheduleId(scheduleId);
-
-
-        allSeats.sort(Comparator.comparing(seat -> calculateDistance(seat, centerRow, centerSeat)));
-
         List<Seat> recommendedSeats = new ArrayList<>();
+
+        // Convert list of seats to a map for faster access
+        Map<Integer, Map<Integer, Seat>> seatMap = new HashMap<>();
         for (Seat seat : allSeats) {
-            if (!seat.isOccupied()) {
-                boolean canBePartOfGroup = recommendedSeats.isEmpty() || isContiguous(recommendedSeats.get(recommendedSeats.size() - 1), seat);
-                if (canBePartOfGroup && recommendedSeats.size() < numberOfTickets) {
-                    recommendedSeats.add(seat);
+            seatMap.computeIfAbsent(seat.getSeatRow(), k -> new HashMap<>())
+                    .put(seat.getSeatNumber(), seat);
+        }
+
+        for (Seat startingSeat : allSeats) {
+            int row = startingSeat.getSeatRow();
+            int startingNumber = startingSeat.getSeatNumber();
+
+            // Check if a contiguous block of seats fits within the row
+            if (startingNumber + numberOfTickets - 1 > 9) {
+                continue;
+            }
+
+            boolean oneIsOccupied = false;
+            List<Seat> tempSeats = new ArrayList<>();
+
+            for (int i = 0; i < numberOfTickets; i++) {
+                Seat seat = seatMap.get(row).get(startingNumber + i);
+                if (seat == null || seat.isOccupied()) {
+                    oneIsOccupied = true;
+                    break;
+                }
+                tempSeats.add(seat);
+            }
+
+            if (!oneIsOccupied) {
+                // Calculate the middle seat's position
+                int seatsFromStartingSeat = (numberOfTickets - 1) / 2;
+                Seat centeredSeat = tempSeats.get(seatsFromStartingSeat);
+
+                // Calculate the distance from the center
+                double newDistance = calculateDistance(centeredSeat, centerRow, centerSeat);
+                int rowDifference = Math.abs(row - centerRow);
+
+                // Update recommended seats based on primary and secondary criteria
+                if (newDistance < minDistance || (newDistance == minDistance && rowDifference < minRowDifference)) {
+                    minDistance = newDistance;
+                    minRowDifference = rowDifference;
+                    recommendedSeats = new ArrayList<>(tempSeats);
                 }
             }
         }
 
-        recommendedSeats.forEach(seat -> {
+        for (Seat seat : recommendedSeats) {
             seat.setRecommended(true);
-            seatRepository.save(seat);
-        });
-    }
+        }
 
-    private boolean isContiguous(Seat seat1, Seat seat2) {
-        return seat1.getSeatRow() == seat2.getSeatRow() && Math.abs(seat1.getSeatNumber() - seat2.getSeatNumber()) == 1;
-    }
-
-    private int calculateDistance(Seat seat, int centerRow, int centerSeat) {
-        int rowDifference = Math.abs(seat.getSeatRow() - centerRow);
-        int seatDifference = Math.abs(seat.getSeatNumber() - centerSeat);
-        return rowDifference + seatDifference;
+        seatRepository.saveAll(recommendedSeats);
     }
 
     /**
+     * Calculates distance from the center by using Euclidean distance
+     * @param seat - the seat that we are calculating distance for
+     * @param centerRow - number of the row of centered seat
+     * @param centerSeat - number of the centered seat
+     * @return - the distance between two
+     */
+    private double calculateDistance(Seat seat, int centerRow, int centerSeat) {
+        int rowDifference = seat.getSeatRow() - centerRow;
+        int seatDifference = seat.getSeatNumber() - centerSeat;
+        return Math.sqrt(rowDifference * rowDifference + seatDifference * seatDifference); // Euclidean distance
+    }
+
+
+    /**
      * Sets all the recommended seats back to false.
-     * Used after the seat selection process is cancelled or finished.
+     * Used every time before new seat selection process
      * @param scheduleId - id of the seance
      */
     private void setAllRecommendedToFalse(Long scheduleId) {
@@ -211,8 +252,8 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
      * @param schedule - Schedule entity (seance)
      */
     private void createSeatsForSchedule(Schedule schedule) {
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
+        for (int i = 1; i <= 9; i++) {
+            for (int j = 1; j <= 9; j++) {
                 Seat seat = new Seat();
                 seat.setSchedule(schedule);
                 seat.setSeatRow(i);

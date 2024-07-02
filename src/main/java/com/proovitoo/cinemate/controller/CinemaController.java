@@ -18,11 +18,9 @@ import java.util.List;
 @RequestMapping("/cinemate")
 public class CinemaController {
     private final CinemaService cinemaService;
-    private final SeatRepository seatRepository;
 
-    public CinemaController(CinemaService cinemaService, SeatRepository seatRepository) {
+    public CinemaController(CinemaService cinemaService) {
         this.cinemaService = cinemaService;
-        this.seatRepository = seatRepository;
     }
 
 
