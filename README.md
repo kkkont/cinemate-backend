@@ -17,4 +17,4 @@ git clone https://github.com/kkkont/cinemate-backend/
 ```
 2. Run the main application
   - Navigate to the root directory of the project.
-  - Run the main application class CinemateApplication.java located in the src/main/java/com/proovitoo/cinemate/ javadirectory.
+  - Run the main application class CinemateApplication.java located in the src/main/java/com/proovitoo/cinemate directory.
