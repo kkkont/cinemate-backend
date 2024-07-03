@@ -35,6 +35,7 @@ public class CinemaController {
 
     /**
      * Endpoint for movies
+     *
      * @return - all the movies in the database
      */
     @GetMapping("/movies")
@@ -43,7 +44,20 @@ public class CinemaController {
     }
 
     /**
+     * Endpoint for filtered movies
+     *
+     * @param genre - genre which is selected
+     * @param age   - age restriction which is selected
+     * @return - filtered movies
+     */
+    @GetMapping("/filterByGenre")
+    public List<Movie> getMoviesByGenre(@RequestParam String genre, @RequestParam String age) {
+        return cinemaService.getFilteredMovies(genre, age);
+    }
+
+    /**
      * Endpoint for a movie schedule
+     *
      * @param movieId - id of the movie we would like a schedule for
      * @return - a schedule for the provided movie (id)
      */
@@ -54,7 +68,8 @@ public class CinemaController {
 
     /**
      * Endpoint for the recommended seats which are in one seance
-     * @param scheduleID - id of a specific seance
+     *
+     * @param scheduleID      - id of a specific seance
      * @param numberOfTickets - how many tickets are being bought
      * @return - recommended seats for exactly the number of tickets and for the seance with schedule id
      */
@@ -66,6 +81,7 @@ public class CinemaController {
 
     /**
      * Endpoint for creating user history
+     *
      * @param userHistory - the history which we would like to save
      * @return - response entity CREATED
      */
@@ -77,6 +93,7 @@ public class CinemaController {
 
     /**
      * Endpoint for updating seat occupancy after the tickets are bought
+     *
      * @param seatIds - the seats that are selected by the user
      * @return - response entity ACCEPTED
      */
@@ -85,4 +102,6 @@ public class CinemaController {
         cinemaService.updateSeatOccupancy(seatIds);
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
+
+
 }

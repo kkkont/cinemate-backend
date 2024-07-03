@@ -26,7 +26,8 @@ public class CinemaService {
     /**
      * Find seats by schedule id and the number of tickets.
      * Use recommendSeats method to mark seats as recommended
-     * @param scheduleId - id of the seance
+     *
+     * @param scheduleId      - id of the seance
      * @param numberOfTickets - number of the tickets being bought
      * @return - a list of seats for the seance
      */
@@ -38,7 +39,7 @@ public class CinemaService {
     /**
      * Algorithm that recommends seats to the middle of the hall using Euclidean distance
      *
-     * @param scheduleId - id of the seance
+     * @param scheduleId      - id of the seance
      * @param numberOfTickets - number of the tickets being bought
      */
     public void recommendSeats(Long scheduleId, int numberOfTickets) {
@@ -106,8 +107,9 @@ public class CinemaService {
 
     /**
      * Calculates distance from the center by using Euclidean distance
-     * @param seat - the seat that we are calculating distance for
-     * @param centerRow - number of the row of centered seat
+     *
+     * @param seat       - the seat that we are calculating distance for
+     * @param centerRow  - number of the row of centered seat
      * @param centerSeat - number of the centered seat
      * @return - the distance between two
      */
@@ -121,6 +123,7 @@ public class CinemaService {
     /**
      * Sets all the recommended seats back to false.
      * Used every time before new seat selection process
+     *
      * @param scheduleId - id of the seance
      */
     private void setAllRecommendedToFalse(Long scheduleId) {
@@ -131,17 +134,48 @@ public class CinemaService {
     }
 
     /**
-     *
      * @return - all movies from the repository
      */
     public List<Movie> getAllMovies() {
         return movieRepository.findAll();
     }
 
+    /**
+     * Filtering movies
+     *
+     * @param genre - genre which is selected
+     * @param age   - age restriction which is selected
+     * @return - list of filtered moviesˇ
+     */
+    public List<Movie> getFilteredMovies(String genre, String age) {
+        return movieRepository.findByGenreNamesContainsAndAgeRestriction(genre, age);
+    }
+
+    /**
+     * Saves user history
+     *
+     * @param userHistory - the collected data which is being saved
+     * @return - using repository we save the history
+     */
+    public UserHistory save(UserHistory userHistory) {
+        return userHistoryRepository.save(userHistory);
+    }
+
+    /**
+     * We set the seat occupation to true through seat repository
+     *
+     * @param seatIds - a list of seats that are being updated
+     */
+    public void updateSeatOccupancy(List<Long> seatIds) {
+        seatRepository.findAllById(seatIds).forEach(seat -> {
+            seat.setOccupied(true);
+            seatRepository.save(seat);
+        });
+    }
 
     /**
      * Creates Movie, Genre, Schedule, Seat entities for the movies
-     * Not the best practice, but for the simplicity I kept it that way.
+     * Hardcoded. Not the best practice, but for the simplicity I kept it that way.
      */
     public void createMovies() {
         String[] titles = {"One Life", "Dune: Part Two", "Oppenheimer", "Anyone But You"};
@@ -209,6 +243,7 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
 
     /**
      * Creates Genre entities
+     *
      * @param genres - all the genres
      * @return - a set of Genre entities
      */
@@ -231,9 +266,10 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
 
     /**
      * Creates a Schedule entity and saves it through repository
-     * @param movie - Movie entity
-     * @param dateTime - the date and time of the seance
-     * @param language - the language of the seance
+     *
+     * @param movie     - Movie entity
+     * @param dateTime  - the date and time of the seance
+     * @param language  - the language of the seance
      * @param subtitles - the subtitles language of the seance
      */
     public void createSchedule(Movie movie, LocalDateTime dateTime, String language, String subtitles) {
@@ -249,6 +285,7 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
 
     /**
      * Creates Seat entities for the seance
+     *
      * @param schedule - Schedule entity (seance)
      */
     private void createSeatsForSchedule(Schedule schedule) {
@@ -267,6 +304,7 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
 
     /**
      * Finds a schedule for a movie
+     *
      * @param movieId - id of a movie for which we are finding a schedule for
      * @return - a list of Schedule entities for the movie
      */
@@ -274,23 +312,4 @@ Villeneuve is again collaborating with his “Dune” creatives: Oscar-winning d
         return scheduleRepository.findByMovieId(movieId);
     }
 
-    /**
-     * Saves user history
-     * @param userHistory - the collected data which is being saved
-     * @return - using repository we save the history
-     */
-    public UserHistory save(UserHistory userHistory) {
-        return userHistoryRepository.save(userHistory);
-    }
-
-    /**
-     * We set the seat occupation to true through seat repository
-     * @param seatIds - a list of seats that are being updated
-     */
-    public void updateSeatOccupancy(List<Long> seatIds) {
-        seatRepository.findAllById(seatIds).forEach(seat -> {
-            seat.setOccupied(true);
-            seatRepository.save(seat);
-        });
-    }
 }

@@ -7,11 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MovieRepository extends JpaRepository<Movie,Long> {
-    /**
-     * Would implement it after to apply some filters
-     * @param genreName - the genre of movies we are looking for
-     * @return - list of the movies in that genre
-     */
-    List<Movie> findByGenresName(String genreName);
+public interface MovieRepository extends JpaRepository<Movie, Long> {
+
+    List<Movie> findByGenreNamesContainsAndAgeRestriction(String genre, String age);
 }
