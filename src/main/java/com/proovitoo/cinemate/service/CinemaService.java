@@ -24,6 +24,14 @@ public class CinemaService {
     }
 
     /**
+     * To find movie with id.
+     * @param id - id that is provided
+     * @return - movie
+     */
+    public Movie getMovieById(Long id){
+        return movieRepository.findMovieById(id);
+    }
+    /**
      * Find seats by schedule id and the number of tickets.
      * Use recommendSeats method to mark seats as recommended
      *

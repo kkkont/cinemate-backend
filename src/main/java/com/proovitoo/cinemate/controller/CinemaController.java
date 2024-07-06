@@ -59,6 +59,22 @@ public class CinemaController {
     }
 
     /**
+     * Endpoint for finding movie by id
+     *
+     * @param id - provided id
+     * @return - movie
+     */
+    @GetMapping("/movies/{id}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
+        Movie movie = cinemaService.getMovieById(id);
+        if (movie != null) {
+            return ResponseEntity.ok(movie);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
      * Endpoint for a movie schedule
      *
      * @param movieId - id of the movie we would like a schedule for

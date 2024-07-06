@@ -16,4 +16,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
             "AND (:age IS NULL OR m.ageRestriction = :age)")
     List<Movie> findMoviesByFilters(@Param("genre") String genre,
                                     @Param("age") String age);
+
+    Movie findMovieById(Long id);
 }
