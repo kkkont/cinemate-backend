@@ -147,8 +147,9 @@ public class CinemaService {
      * @param age   - age restriction which is selected
      * @return - list of filtered moviesˇ
      */
+
     public List<Movie> getFilteredMovies(String genre, String age) {
-        return movieRepository.findByGenreNamesContainsAndAgeRestriction(genre, age);
+        return movieRepository.findMoviesByFilters(genre, age);
     }
 
     /**

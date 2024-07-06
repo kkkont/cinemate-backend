@@ -50,8 +50,11 @@ public class CinemaController {
      * @param age   - age restriction which is selected
      * @return - filtered movies
      */
-    @GetMapping("/filterByGenre")
-    public List<Movie> getMoviesByGenre(@RequestParam String genre, @RequestParam String age) {
+    @GetMapping("/filter")
+    public List<Movie> getFilteredMovies(
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String age
+    ) {
         return cinemaService.getFilteredMovies(genre, age);
     }
 
