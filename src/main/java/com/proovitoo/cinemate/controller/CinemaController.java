@@ -23,16 +23,6 @@ public class CinemaController {
         this.cinemaService = cinemaService;
     }
 
-
-    /**
-     * Creates movies for the application
-     * In this application I have just inserted them manually, could be done in any other way.
-     */
-    @PostConstruct
-    public void init() {
-        cinemaService.createMovies();
-    }
-
     /**
      * Endpoint for movies
      *
