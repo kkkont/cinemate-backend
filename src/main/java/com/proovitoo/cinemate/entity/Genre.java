@@ -25,6 +25,6 @@ public class Genre {
     private String name;
     @ManyToMany(mappedBy = "genres")
     @JsonIgnore
-    private Set<Movie> movies = null;
+    private Set<Movie> movies = new HashSet<>();
 
 }

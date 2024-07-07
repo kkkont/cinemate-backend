@@ -1,9 +1,6 @@
 package com.proovitoo.cinemate.controller;
 
-import com.proovitoo.cinemate.entity.Movie;
-import com.proovitoo.cinemate.entity.Schedule;
-import com.proovitoo.cinemate.entity.Seat;
-import com.proovitoo.cinemate.entity.UserHistory;
+import com.proovitoo.cinemate.entity.*;
 import com.proovitoo.cinemate.repository.SeatRepository;
 import com.proovitoo.cinemate.service.CinemaService;
 import jakarta.annotation.PostConstruct;
@@ -62,6 +59,24 @@ public class CinemaController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Endpoint for finding all genres
+     * @return - all genres
+     */
+    @GetMapping("/genres")
+    public List<Genre> getAllGenres() {
+        return cinemaService.findAllGenres();
+    }
+
+    /**
+     * Endpoint for finding all age restrictions
+     * @return - all age restrictions
+     */
+    @GetMapping("/rated")
+    public List<String> getAllAgeRestrictions(){
+        return cinemaService.findAllAgeRestriction();
     }
 
     /**

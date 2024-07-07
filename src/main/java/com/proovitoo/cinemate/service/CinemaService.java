@@ -192,4 +192,24 @@ public class CinemaService {
         return scheduleRepository.findByMovieId(movieId);
     }
 
+    /**
+     * Finds all the genres
+     * @return - list of the genres
+     */
+    public List<Genre> findAllGenres() {
+        return genreRepository.findAll();
+    }
+
+    /**
+     * Returns all the age restrictions
+     * @return - list of age restrictions
+     */
+    public List<String> findAllAgeRestriction(){
+        List<String> restrictions = new ArrayList<>();
+        for (Movie movie : movieRepository.findAll()) {
+            String ageRestriction = movie.getAgeRestriction();
+            if(!restrictions.contains(ageRestriction)) restrictions.add(ageRestriction);
+        }
+        return restrictions;
+    }
 }

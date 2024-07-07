@@ -26,6 +26,15 @@ public class Movie {
     private String ageRestriction;
     private int releaseYear;
     private String photo;
+
+    // Extra details
+    private String director;
+    private String writer;
+    private String actors;
+    private String country;
+    private String imdbRating;
+    private String rtRating;
+
     @ManyToMany
     @JoinTable(
             name = "MOVIE_GENRE",
